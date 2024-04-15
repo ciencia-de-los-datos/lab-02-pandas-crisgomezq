@@ -17,30 +17,30 @@ tbl2 = pd.read_csv("tbl2.tsv", sep="\t")
 def pregunta_01():
     """
     ¿Cuál es la cantidad de filas en la tabla `tbl0.tsv`?
-
     Rta/
     40
-
     """
-    return
+    filas = len(tbl0)
+    return filas
+filas = pregunta_01()
+#print(filas)
 
 
 def pregunta_02():
     """
     ¿Cuál es la cantidad de columnas en la tabla `tbl0.tsv`?
-
     Rta/
     4
-
     """
-    return
+    return len(tbl0.columns)
+col = pregunta_02()
+#print(col)
 
 
 def pregunta_03():
     """
     ¿Cuál es la cantidad de registros por cada letra de la columna _c1 del archivo
     `tbl0.tsv`?
-
     Rta/
     A     8
     B     7
@@ -48,9 +48,11 @@ def pregunta_03():
     D     6
     E    14
     Name: _c1, dtype: int64
-
     """
-    return
+    conteo = tbl0.groupby('_c1')['_c1'].count()
+    return  conteo
+orden = pregunta_03()
+#print(orden)
 
 
 def pregunta_04():
@@ -65,7 +67,10 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    promedio = tbl0.groupby('_c1')['_c2'].mean()
+    return promedio
+promedio = pregunta_04()
+#print(promedio)
 
 
 def pregunta_05():
@@ -82,7 +87,10 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    max = tbl0.groupby('_c1')['_c2'].max()
+    return max
+max = pregunta_05()
+#print(max)
 
 
 def pregunta_06():
@@ -92,15 +100,17 @@ def pregunta_06():
 
     Rta/
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-
     """
-    return
+    unico = tbl1.groupby('_c4')['_c4'].unique()
+    resultado = [str(valor[0]).upper() for valor in unico]
+    return resultado
+resultado = pregunta_06()
+#print(resultado)
 
 
 def pregunta_07():
     """
     Calcule la suma de la _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
-
     Rta/
     _c1
     A    37
@@ -110,7 +120,10 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+    resultado = tbl0.groupby('_c1')['_c2'].sum()
+    return resultado
+resultado = pregunta_07()
+#print(resultado)
 
 
 def pregunta_08():
@@ -128,7 +141,12 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    resultado = pd.read_csv('tbl0.tsv', sep='\t')
+    resultado['suma'] = resultado['_c0'] + resultado['_c2']
+
+    return resultado
+resultado = pregunta_08()
+#print(resultado)
 
 
 def pregunta_09():
@@ -146,7 +164,13 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    resultado = pd.read_csv('tbl0.tsv', sep='\t')
+    fecha = resultado['_c3'].str.split('-',expand=True)
+    resultado['year'] = fecha[0]
+    
+    return resultado
+resultado = pregunta_09()
+#print(resultado)
 
 
 def pregunta_10():
@@ -163,7 +187,11 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    resultado = tbl0.groupby('_c1')['_c2'].apply(lambda x: ':'.join(sorted(x.astype(str)))).reset_index(name='_c2')
+    
+    return resultado
+resultado = pregunta_10()
+#print(resultado)
 
 
 def pregunta_11():
@@ -182,7 +210,11 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+
+    resultado = tbl1.groupby('_c0')['_c4'].apply(lambda x: ','.join(sorted(x.astype(str)))).reset_index(name='_c4')
+    return resultado
+resultado = pregunta_11()
+#print(resultado)
 
 
 def pregunta_12():
@@ -200,7 +232,12 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    tbl2 = pd.read_csv('tbl2.tsv', sep='\t')
+    tbl2 = tbl2.sort_values(by='_c5a')
+    resultado = tbl2.groupby('_c0').apply(lambda x: ':'.join(x['_c5a'].astype(str) + ':' + x['_c5b'].astype(str))).reset_index(name='_c5')
+    return resultado
+resultado = pregunta_12()
+#print(resultado)
 
 
 def pregunta_13():
@@ -217,4 +254,10 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+
+    union = pd.merge(tbl0, tbl2, on='_c0')
+    resultado = union.groupby('_c1')['_c5b'].sum('_c5b')
+
+    return resultado
+resultado = pregunta_13()
+#print(resultado)
