@@ -187,11 +187,13 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    resultado = tbl0.groupby('_c1')['_c2'].apply(lambda x: ':'.join(sorted(x.astype(str)))).reset_index(name='_c2')
     
-    return resultado
-resultado = pregunta_10()
-#print(resultado)
+
+    df = pd.read_csv('tbl0.tsv', sep='\t')
+    df = df.groupby('_c1')['_c2'].apply(lambda x: ':'.join(sorted(x.astype(str)))).to_frame()
+    return df
+df = pregunta_10()
+#print(df)
 
 
 def pregunta_11():
@@ -234,9 +236,7 @@ def pregunta_12():
     """
     tbl2 = pd.read_csv('tbl2.tsv', sep='\t')
     tbl2 = tbl2.sort_values(by='_c5a')
-    resultado = tbl2.groupby('_c0').apply(lambda x: ':'.join(x['_c5a'].astype(str) + ':' + x['_c5b'].astype(str)), include_groups=False).reset_index(name='_c5')
-
-
+    resultado = tbl2.groupby('_c0').apply(lambda x: ','.join(x['_c5a'].astype(str) + ':' + x['_c5b'].astype(str)), include_groups=False).reset_index(name='_c5')
     return resultado
 resultado = pregunta_12()
 #print(resultado)
