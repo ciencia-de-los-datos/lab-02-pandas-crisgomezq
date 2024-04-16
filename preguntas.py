@@ -234,7 +234,9 @@ def pregunta_12():
     """
     tbl2 = pd.read_csv('tbl2.tsv', sep='\t')
     tbl2 = tbl2.sort_values(by='_c5a')
-    resultado = tbl2.groupby('_c0').apply(lambda x: ':'.join(x['_c5a'].astype(str) + ':' + x['_c5b'].astype(str))).reset_index(name='_c5')
+    resultado = tbl2.groupby('_c0').apply(lambda x: ':'.join(x['_c5a'].astype(str) + ':' + x['_c5b'].astype(str)), include_groups=False).reset_index(name='_c5')
+
+
     return resultado
 resultado = pregunta_12()
 #print(resultado)
